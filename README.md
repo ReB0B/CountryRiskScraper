@@ -4,13 +4,13 @@ Web scraper using selenium to check whether a student has increased evidentiary 
 ## Use Case
 This web scraper helps universities and education providers determine visa requirements for international students under the Simplified Student Visa Framework (SSVF). It checks whether students from specific countries qualify for streamlined visa processing or need to provide additional evidence (e.g., financial capacity, English proficiency) based on their Country Risk Rating and the institution’s Risk Rating.
 
+## Prerequisite
+Risk ratings of a two different universities with a different risk rating should be known.
+
 ### Who can use it:
 
 1. Universities: Assess visa requirements for applicants.
-
 2. Education Agents: Guide students on visa documentation.
-
-3. Students: Self-check visa application requirements.
 
 The tool automates the process and saves time for a mundane task
 
@@ -42,6 +42,7 @@ The tool automates the process and saves time for a mundane task
     - If there are a limited number of countries, the row number needs to be changed
 7. SHEET_NAME=XXX
     - sheet name for the excel
+8. UNI1/UNI2 = Name of the universities to be compared
 
 ## Running the Program
 ```python3 main.py```

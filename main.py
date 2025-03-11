@@ -15,13 +15,13 @@ excel_loader = ExcelHandler(filename=file_name, sheetname=sheet_name)
 scraper = WebScraper()
 scraper.open_website()
 
-# Process all countries for University of Newcastle (UON)
-scraper.process_countries(excel_loader.countries, excel_loader, provider="University of Newcastle")
+# Process all countries for UNI1 (first provider)
+scraper.process_countries(excel_loader.countries, excel_loader, provider=os.getenv("UNI1"))
 
-# Process all countries again for The Peach Institute (PEACH)
-scraper.process_countries(excel_loader.countries, excel_loader, provider="The Peach Institute")
+# Process all countries again for UNI2 (second provider)
+scraper.process_countries(excel_loader.countries, excel_loader, provider=os.getenv("UNI2"))
 
-# Save updated values to original Excel file
+# Save updated values to the original Excel file
 excel_loader.save_to_excel()
 
 # Export final dictionary to a new Excel file if needed

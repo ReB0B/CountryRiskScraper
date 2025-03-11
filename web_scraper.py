@@ -32,16 +32,17 @@ class WebScraper:
         self.driver.get(self.document_checklist_website)
         print("Website loaded successfully.")
 
-
-    def process_countries(self, countries, excel_handler, provider="University of Newcastle"):
+    def process_countries(self, countries, excel_handler, provider):
         """
         Loops through all countries, performs checks, and updates the ExcelHandler.
         
         Args:
-        - countries: List of country names from the ExcelHandler.
-        - excel_handler: Instance of ExcelHandler to store UON and PEACH results.
-        - provider: The education provider to select (UON or Peach Institute).
+          - countries: List of country names from the ExcelHandler.
+          - excel_handler: Instance of ExcelHandler to store UNI1 and UNI2 results.
+          - provider: The education provider to select (value from .env for UNI1 or UNI2).
         """
+        uni1 = os.getenv("UNI1")
+        uni2 = os.getenv("UNI2")
         institution_selected = False  # Track if the institution is already selected
 
         for index, country in enumerate(countries):
@@ -56,13 +57,13 @@ class WebScraper:
             self.click_display_evidence()
             contains_evidence = self.check_evidence_on_page()
 
-            # Set the correct values based on the provider
-            if provider == "University of Newcastle":
-                uon_value = "Y" if contains_evidence else "N"
-                excel_handler.update_country_data(country, uon_value, excel_handler.country_data[country]["PEACH"])
-            elif provider == "The Peach Institute":
-                peach_value = "Y" if contains_evidence else "N"
-                excel_handler.update_country_data(country, excel_handler.country_data[country]["UON"], peach_value)
+            # Update the corresponding provider value based on the evidence check
+            if provider == uni1:
+                uni1_value = "Y" if contains_evidence else "N"
+                excel_handler.update_country_data(country, uni1_value, excel_handler.country_data[country][uni2])
+            elif provider == uni2:
+                uni2_value = "Y" if contains_evidence else "N"
+                excel_handler.update_country_data(country, excel_handler.country_data[country][uni1], uni2_value)
 
         print(f"All countries processed for provider: {provider}")
 
@@ -108,7 +109,7 @@ class WebScraper:
     def select_radio_option(self):
         """Selects the radio button from the image (for='01')."""
         try:
-            radio_button = self.driver.find_element(By.ID, "01")  # ID is '01' from your image
+            radio_button = self.driver.find_element(By.ID, "01")  # ID is '01' on the website
             radio_button.click()
             print("Radio button selected successfully.")
             time.sleep(1)  # Allow time for selection
@@ -128,13 +129,9 @@ class WebScraper:
     def check_evidence_on_page(self):
         """Checks if 'Evidence of financial capacity' or 'Evidence of English language ability' appears inside <h3> tags."""
         try:
-            # Find all <h3> elements
             h3_elements = self.driver.find_elements(By.XPATH, "//h3")
-
-            # Convert <h3> elements to lowercase text for comparison
             h3_texts = [h3.text.lower() for h3 in h3_elements]
 
-            # Check for presence of required phrases
             contains_financial = any("evidence of financial capacity" in text for text in h3_texts)
             contains_english = any("evidence of english language ability" in text for text in h3_texts)
 
