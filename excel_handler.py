@@ -3,11 +3,12 @@ from dotenv import load_dotenv
 import os
 
 class ExcelHandler:
-    def __init__(self, filename, sheetname):
+    def __init__(self, filename, sheetname, uni1_name=None, uni2_name=None):
         """Initialize the Excel handler by loading the workbook and extracting country names."""
         load_dotenv()
-        self.uni1 = os.getenv("UNI1")
-        self.uni2 = os.getenv("UNI2")
+        # Use provided university names or fallback to environment variables
+        self.uni1 = uni1_name if uni1_name else os.getenv("UNI1")
+        self.uni2 = uni2_name if uni2_name else os.getenv("UNI2")
         
         self.filename = filename
         self.wb = load_workbook(filename=self.filename)

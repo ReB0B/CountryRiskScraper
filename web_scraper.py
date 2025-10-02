@@ -8,13 +8,13 @@ import os
 import time
 
 class WebScraper:
-    def __init__(self):
+    def __init__(self, website_url=None):
         """Initialize the web scraper by loading environment variables and setting up the browser."""
         load_dotenv()  # Load environment variables
 
-        # Load configuration from .env
+        # Load configuration from .env or use provided values
         self.chromedriver_location = os.getenv("CHROMEDRIVER_LOCATION")
-        self.document_checklist_website = os.getenv("DOCUMENT_CHECKLIST_WEBSITE")
+        self.document_checklist_website = website_url if website_url else os.getenv("DOCUMENT_CHECKLIST_WEBSITE")
         self.passport_field = os.getenv("PASSPORT_FIELD")
         self.education_provider_field = os.getenv("EDUCATION_PROVIDER_FIELD")
         self.submit_button_id = "btnSubmitEvidence"
@@ -39,10 +39,11 @@ class WebScraper:
         Args:
           - countries: List of country names from the ExcelHandler.
           - excel_handler: Instance of ExcelHandler to store UNI1 and UNI2 results.
-          - provider: The education provider to select (value from .env for UNI1 or UNI2).
+          - provider: The education provider to select (university name from GUI or .env).
         """
-        uni1 = os.getenv("UNI1")
-        uni2 = os.getenv("UNI2")
+        # Get university names from the excel_handler which now contains user-provided values
+        uni1 = excel_handler.uni1
+        uni2 = excel_handler.uni2
         institution_selected = False  # Track if the institution is already selected
 
         for index, country in enumerate(countries):
