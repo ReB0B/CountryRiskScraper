@@ -15,7 +15,7 @@ class ExcelHandler:
         self.sheet = self.wb[sheetname]
 
         # Read country names from Column A (Rows 3 to 238)
-        self.countries = [self.sheet[f"A{row}"].value for row in range(3, 239)]
+        self.countries = [self.sheet[f"A{row}"].value for row in range(3, 238)]
         
         # Initialize nested dictionary with default values using UNI1 and UNI2 keys
         self.country_data = {country: {self.uni1: "N", self.uni2: "N"} for country in self.countries}

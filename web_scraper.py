@@ -77,10 +77,22 @@ class WebScraper:
 
             search_box = self.driver.find_element(By.CLASS_NAME, "select2-search__field")
             search_box.send_keys(country_name)
-            search_box.send_keys(Keys.ENTER)
             time.sleep(2)  # Allow selection to process
 
-            print(f"Country '{country_name}' selected successfully.")
+            searchbox_dropdown_ul = self.driver.find_element(By.ID, "select2-drpWebEvtCountryPassport-results")
+            li_elements = searchbox_dropdown_ul.find_elements(By.TAG_NAME, "li")
+            li_texts = [li.text for li in li_elements]
+            print(li_texts)
+            if any("No results found" in text for text in li_texts):
+                print(f"Country '{country_name}' not found in dropdown.")
+                search_box.clear()
+                search_box.send_keys(country_name[:4])
+                search_box.send_keys(Keys.ENTER)
+                time.sleep(2)  # Allow selection to process
+            else:
+                search_box.send_keys(Keys.ENTER)
+                print(f"Country '{country_name}' selected successfully.")
+
         except Exception as e:
             print(f"Error selecting country {country_name}: {e}")
 
